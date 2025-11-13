@@ -72,17 +72,17 @@
 <div class="min-h-screen auth-bg flex items-center justify-center p-4">
 	<div class="w-full max-w-4xl">
 		<div class="auth-card rounded-3xl shadow-2xl overflow-hidden">
-			<div class="flex flex-col lg:flex-row min-h-[600px]">
+				<div class="flex flex-col lg:flex-row lg:min-h-[600px]">
 				
-				<!-- Left Panel - Welcome Message -->
-				<div class="lg:w-1/2 bg-primary p-12 flex flex-col justify-center items-center text-white relative overflow-hidden">
-					<!-- Decorative elements -->
-					<div class="absolute top-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -translate-x-20 -translate-y-20"></div>
-					<div class="absolute bottom-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full translate-x-16 translate-y-16"></div>
+					<!-- Left Panel - Welcome Message -->
+					<div class="lg:w-1/2 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center items-center text-white relative overflow-hidden" style="background-color: #7495ED;">
+						<!-- Decorative elements (hidden on small screens) -->
+						<div class="hidden sm:block absolute top-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -translate-x-20 -translate-y-20"></div>
+						<div class="hidden sm:block absolute bottom-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full translate-x-16 translate-y-16"></div>
 					
 					<div class="relative z-10 text-center">
-						<h2 class="text-4xl font-bold mb-4">Hello, Welcome!</h2>
-						<p class="text-xl mb-8 opacity-90 leading-relaxed">
+						<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">Hello, Welcome!</h2>
+						<p class="text-base sm:text-lg mb-8 opacity-90 leading-relaxed">
 							Enter your personal details and start your journey with us
 						</p>
 						<div class="space-y-4">
@@ -95,8 +95,8 @@
 					</div>
 				</div>
 
-				<!-- Right Panel - Login Form -->
-				<div class="lg:w-1/2 p-12 flex flex-col justify-center bg-white">
+						<!-- Right Panel - Login Form -->
+						<div class="lg:w-1/2 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center bg-gray-100">
 					<div class="max-w-md mx-auto w-full">
 						<div class="text-center mb-8">
 							<h1 class="text-3xl font-bold text-gray-800 mb-2">Login</h1>
@@ -218,7 +218,7 @@
 								</div>
 							</div>
 
-							<div class="mt-6 grid grid-cols-4 gap-3">
+							<div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
 								<!-- Google -->
 								<button
 									on:click={() => handleSocialLogin('google')}
