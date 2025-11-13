@@ -128,6 +128,16 @@
 		}
 	}
 
+	function selectLesson(lesson) {
+		if (lesson.locked) return; // Don't allow access to locked lessons
+		currentLesson = lesson;
+	}
+
+	function startLesson(lesson) {
+		if (lesson.locked) return; // Don't allow access to locked lessons
+		goto(`/lessons/${lesson.id}`);
+	}
+
 	onMount(() => {
 		if ($auth.isAuthenticated) {
 			loadCourse();
@@ -220,14 +230,26 @@
 										<div class="text-6xl mb-4">🎬</div>
 										<h3 class="text-xl font-bold mb-2">Lesson Content</h3>
 										<p class="text-gray-300 mb-6">
-											This is where the lesson content would be displayed - video player, reading material, interactive exercises, etc.
+											Ready to start this lesson? Click below to access the full lesson viewer with video content, notes, and AI assistance.
 										</p>
 										<div class="flex justify-center space-x-4">
-											<button class="bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
-												▶️ Play Video
+											<button 
+												on:click={() => startLesson(currentLesson)}
+												class="bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+												disabled={currentLesson.locked}
+											>
+												{#if currentLesson.completed}
+													🔄 Review Lesson
+												{:else}
+													▶️ Start Lesson
+												{/if}
 											</button>
-											<button class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-colors">
-												📖 View Notes
+											<button 
+												on:click={() => startLesson(currentLesson)}
+												class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+												disabled={currentLesson.locked}
+											>
+												📖 View in Lesson Viewer
 											</button>
 										</div>
 									</div>
@@ -290,9 +312,9 @@
 							<h3 class="font-bold text-gray-900 mb-4">Course Lessons</h3>
 							<div class="space-y-2">
 								{#each lessons as lesson, i}
-									<div class="flex items-center space-x-3 p-3 rounded-xl {lesson.current ? 'bg-primary/10 border border-primary/20' : 'hover:bg-gray-50/50'} transition-colors cursor-pointer"
-										 on:click={() => currentLesson = lesson}
-										 on:keydown={(e) => e.key === 'Enter' && (currentLesson = lesson)}
+									<div class="flex items-center space-x-3 p-3 rounded-xl {lesson.current ? 'bg-primary/10 border border-primary/20' : 'hover:bg-gray-50/50'} transition-colors cursor-pointer {lesson.locked ? 'opacity-60' : ''}"
+										 on:click={() => selectLesson(lesson)}
+										 on:keydown={(e) => e.key === 'Enter' && selectLesson(lesson)}
 										 role="button"
 										 tabindex="0">
 										<div class="flex-shrink-0">
@@ -319,8 +341,22 @@
 											<div class="flex items-center space-x-2 text-xs text-gray-600">
 												<span>{getLessonIcon(lesson.type)}</span>
 												<span>{lesson.duration}</span>
+												{#if lesson.locked}
+													<span class="text-amber-600">🔒 Locked</span>
+												{/if}
 											</div>
 										</div>
+										{#if !lesson.locked}
+											<button 
+												on:click|stopPropagation={() => startLesson(lesson)}
+												class="opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:text-primary/80 p-1"
+												title="Open in Lesson Viewer"
+											>
+												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+												</svg>
+											</button>
+										{/if}
 									</div>
 								{/each}
 							</div>

@@ -116,7 +116,19 @@ export const api = {
     // Course endpoints
     getCourses: () => request('/courses'),
     getCourse: (courseId) => request(`/courses/${courseId}`),
+    enrollInCourse: (courseId) => request(`/courses/enroll/${courseId}`, {
+        method: 'POST',
+    }),
     getStudentProgress: () => request('/student/progress'),
+    
+    // Lesson endpoints
+    getLesson: (lessonId) => request(`/lessons/${lessonId}`),
+    
+    // AI Tutor endpoints
+    askAITutor: (question, lessonContext) => request('/ai/tutor', {
+        method: 'POST',
+        body: JSON.stringify({ question, lessonContext }),
+    }),
     
     // Quiz endpoints
     getUpcomingQuizzes: () => request('/student/quizzes/upcoming'),

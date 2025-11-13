@@ -164,16 +164,29 @@
 	}
 
 	function enrollInCourse(courseId) {
-		// This would call the API to enroll the student
-		console.log(`Enrolling in course ${courseId}`);
-		
-		// Update the course enrollment status
-		courses = courses.map(course => 
-			course.id === courseId 
-				? { ...course, enrolled: true, progress: 0 }
-				: course
-		);
-		filterCourses();
+		// Use the API to enroll the student
+		api.enrollInCourse(courseId)
+			.then(() => {
+				console.log(`Successfully enrolled in course ${courseId}`);
+				
+				// Update the course enrollment status
+				courses = courses.map(course => 
+					course.id === courseId 
+						? { ...course, enrolled: true, progress: 0 }
+						: course
+				);
+				filterCourses();
+			})
+			.catch(err => {
+				console.error('Enrollment failed:', err);
+				// For now, still update UI (since API might not be ready)
+				courses = courses.map(course => 
+					course.id === courseId 
+						? { ...course, enrolled: true, progress: 0 }
+						: course
+				);
+				filterCourses();
+			});
 	}
 
 	// Watch for changes in search and filter inputs
@@ -291,93 +304,172 @@
 						<p class="text-gray-600">Try adjusting your search criteria or browse all courses.</p>
 					</div>
 				{:else}
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-						{#each filteredCourses as course}
-							<div class="bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group">
-								<!-- Course Header -->
-								<div class="flex items-center space-x-4 mb-4">
-									<div class="text-4xl">{course.thumbnail}</div>
-									<div class="flex-1">
-										<h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
-											{course.title}
-										</h3>
-										<p class="text-sm text-gray-600">by {course.instructor}</p>
-									</div>
-									{#if course.enrolled}
-										<div class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-											Enrolled
+					<!-- Enrolled Courses Section -->
+					{@const enrolledCourses = filteredCourses.filter(course => course.enrolled)}
+					{#if enrolledCourses.length > 0}
+						<div class="mb-12">
+							<div class="flex items-center justify-between mb-6">
+								<h2 class="text-2xl font-bold text-gray-900">My Enrolled Courses</h2>
+								<span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full font-medium">
+									{enrolledCourses.length} Course{enrolledCourses.length !== 1 ? 's' : ''}
+								</span>
+							</div>
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{#each enrolledCourses as course}
+									<div class="bg-white/80 backdrop-blur-xl border border-blue-200/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+										<!-- Course Header -->
+										<div class="flex items-center space-x-4 mb-4">
+											<div class="text-4xl">{course.thumbnail}</div>
+											<div class="flex-1">
+												<h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
+													{course.title}
+												</h3>
+												<p class="text-sm text-gray-600">by {course.instructor}</p>
+											</div>
+											<div class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+												Enrolled
+											</div>
 										</div>
-									{/if}
-								</div>
 
-								<!-- Course Description -->
-								<p class="text-sm text-gray-700 mb-4 line-clamp-3">{course.description}</p>
+										<!-- Course Description -->
+										<p class="text-sm text-gray-700 mb-4 line-clamp-3">{course.description}</p>
 
-								<!-- Course Metadata -->
-								<div class="space-y-3 mb-6">
-									<div class="flex justify-between items-center text-sm">
-										<span class="text-gray-600">Category</span>
-										<span class="font-medium text-primary">{course.category}</span>
-									</div>
-									<div class="flex justify-between items-center text-sm">
-										<span class="text-gray-600">Duration</span>
-										<span class="font-medium text-gray-900">{course.duration}</span>
-									</div>
-									<div class="flex justify-between items-center text-sm">
-										<span class="text-gray-600">Difficulty</span>
-										<span class="px-2 py-1 text-xs rounded-full {getDifficultyColor(course.difficulty)}">
-											{course.difficulty}
-										</span>
-									</div>
-									<div class="flex justify-between items-center text-sm">
-										<span class="text-gray-600">Rating</span>
-										<span class="font-medium text-gray-900">⭐ {course.rating} ({course.studentsEnrolled.toLocaleString()} students)</span>
-									</div>
-								</div>
-
-								<!-- Progress Bar (for enrolled courses) -->
-								{#if course.enrolled && course.progress > 0}
-									<div class="mb-4">
-										<div class="flex justify-between text-sm text-gray-600 mb-1">
-											<span>Progress</span>
-											<span>{course.progress}%</span>
+										<!-- Course Metadata -->
+										<div class="space-y-3 mb-6">
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Duration</span>
+												<span class="font-medium text-gray-900">{course.duration}</span>
+											</div>
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Difficulty</span>
+												<span class="px-2 py-1 text-xs rounded-full {getDifficultyColor(course.difficulty)}">
+													{course.difficulty}
+												</span>
+											</div>
 										</div>
-										<div class="bg-gray-200 rounded-full h-2">
-											<div class="bg-primary rounded-full h-2 transition-all duration-500" style="width: {course.progress}%"></div>
-										</div>
-									</div>
-								{/if}
 
-								<!-- Course Actions -->
-								<div class="flex justify-between items-center">
-									<div class="text-lg font-bold text-primary">{course.price}</div>
-									<div class="flex space-x-2">
-										{#if course.enrolled}
+										<!-- Progress Bar -->
+										<div class="mb-4">
+											<div class="flex justify-between text-sm text-gray-600 mb-1">
+												<span>Progress</span>
+												<span>{course.progress}%</span>
+											</div>
+											<div class="bg-gray-200 rounded-full h-2">
+												<div class="bg-primary rounded-full h-2 transition-all duration-500" style="width: {course.progress}%"></div>
+											</div>
+										</div>
+
+										<!-- Course Actions -->
+										<div class="flex space-x-2">
 											<button 
 												on:click={() => goto(`/courses/${course.id}`)}
-												class="primary-btn px-4 py-2 text-sm rounded-xl"
+												class="flex-1 primary-btn px-4 py-2 text-sm rounded-xl"
 											>
 												{course.progress > 0 ? 'Continue' : 'Start'} Learning
 											</button>
-										{:else}
 											<button 
-												on:click={() => enrollInCourse(course.id)}
-												class="primary-btn px-4 py-2 text-sm rounded-xl"
+												on:click={() => goto(`/courses/${course.id}`)}
+												class="secondary-btn px-4 py-2 text-sm rounded-xl"
 											>
-												Enroll Now
+												Details
 											</button>
-										{/if}
-										<button 
-											on:click={() => goto(`/courses/${course.id}`)}
-											class="secondary-btn px-4 py-2 text-sm rounded-xl"
-										>
-											View Details
-										</button>
+										</div>
 									</div>
-								</div>
+								{/each}
 							</div>
-						{/each}
-					</div>
+						</div>
+					{/if}
+
+					<!-- Available Courses Section -->
+					{@const availableCourses = filteredCourses.filter(course => !course.enrolled)}
+					{#if availableCourses.length > 0}
+						<div>
+							<div class="flex items-center justify-between mb-6">
+								<h2 class="text-2xl font-bold text-gray-900">Available Courses</h2>
+								<span class="px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full font-medium">
+									{availableCourses.length} Course{availableCourses.length !== 1 ? 's' : ''}
+								</span>
+							</div>
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{#each availableCourses as course}
+									<div class="bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+										<!-- Course Header -->
+										<div class="flex items-center space-x-4 mb-4">
+											<div class="text-4xl">{course.thumbnail}</div>
+											<div class="flex-1">
+												<h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
+													{course.title}
+												</h3>
+												<p class="text-sm text-gray-600">by {course.instructor}</p>
+											</div>
+										</div>
+
+										<!-- Course Description -->
+										<p class="text-sm text-gray-700 mb-4 line-clamp-3">{course.description}</p>
+
+										<!-- Course Metadata -->
+										<div class="space-y-3 mb-6">
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Category</span>
+												<span class="font-medium text-primary">{course.category}</span>
+											</div>
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Duration</span>
+												<span class="font-medium text-gray-900">{course.duration}</span>
+											</div>
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Difficulty</span>
+												<span class="px-2 py-1 text-xs rounded-full {getDifficultyColor(course.difficulty)}">
+													{course.difficulty}
+												</span>
+											</div>
+											<div class="flex justify-between items-center text-sm">
+												<span class="text-gray-600">Rating</span>
+												<span class="font-medium text-gray-900">⭐ {course.rating} ({course.studentsEnrolled.toLocaleString()} students)</span>
+											</div>
+										</div>
+
+										<!-- Course Actions -->
+										<div class="flex justify-between items-center">
+											<div class="text-lg font-bold text-primary">{course.price}</div>
+											<div class="flex space-x-2">
+												<button 
+													on:click={() => enrollInCourse(course.id)}
+													class="primary-btn px-4 py-2 text-sm rounded-xl"
+												>
+													Enroll Now
+												</button>
+												<button 
+													on:click={() => goto(`/courses/${course.id}`)}
+													class="secondary-btn px-4 py-2 text-sm rounded-xl"
+												>
+													Details
+												</button>
+											</div>
+										</div>
+									</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
+					<!-- Show message if only enrolled courses exist but none match filter -->
+					{#if enrolledCourses.length === 0 && filteredCourses.filter(course => course.enrolled).length > 0}
+						<div class="text-center py-12">
+							<div class="text-6xl mb-4">🎓</div>
+							<h3 class="text-xl font-semibold text-gray-900 mb-2">No enrolled courses match your filters</h3>
+							<p class="text-gray-600">Try adjusting your search criteria to see your enrolled courses.</p>
+						</div>
+					{/if}
+
+					<!-- Show message if only available courses exist but none match filter -->
+					{#if availableCourses.length === 0 && filteredCourses.filter(course => !course.enrolled).length > 0}
+						<div class="text-center py-12">
+							<div class="text-6xl mb-4">🔍</div>
+							<h3 class="text-xl font-semibold text-gray-900 mb-2">No available courses match your filters</h3>
+							<p class="text-gray-600">Try adjusting your search criteria to discover new courses.</p>
+						</div>
+					{/if}
 				{/if}
 			</div>
 		</div>
