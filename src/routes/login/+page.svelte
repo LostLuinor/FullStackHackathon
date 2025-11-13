@@ -10,7 +10,6 @@
 	let successMessage = '';
 	let isLoading = false;
 	let rememberMe = false;
-	let loginMode = 'email'; // 'email' or 'name'
 
 	// Check for success message in URL params
 	$: {
@@ -38,10 +37,12 @@
 		
 		try {			
 			const credentials = { password: password };
-			if (loginMode === 'email') {
-				credentials.mail = identifier;
+			const id = identifier.trim();
+			// If identifier looks like an email, send as mail (lowercased), otherwise send as name
+			if (id.includes('@')) {
+				credentials.mail = id.toLowerCase();
 			} else {
-				credentials.name = identifier;
+				credentials.name = id;
 			}
 			
 			const response = await api.login(credentials);
@@ -65,12 +66,6 @@
 	function handleSocialLogin(platform) {
 		// Placeholder for social login implementation
 		console.log(`Login with ${platform}`);
-	}
-
-	function toggleLoginMode() {
-		loginMode = loginMode === 'email' ? 'name' : 'email';
-		identifier = '';
-		error = '';
 	}
 </script>
 
@@ -109,58 +104,24 @@
 						</div>
 
 						<form on:submit={handleSubmit} class="space-y-6">
-							<!-- Login Mode Toggle -->
-							<div class="flex justify-center mb-6">
-								<div class="bg-gray-100 rounded-full p-1">
-									<button
-										type="button"
-										class="px-4 py-2 text-sm font-medium rounded-full transition-all duration-200"
-										class:bg-primary={loginMode === 'email'}
-										class:text-white={loginMode === 'email'}
-										class:text-gray-600={loginMode !== 'email'}
-										on:click={() => {loginMode = 'email'; identifier = ''; error = '';}}
-									>
-										Email
-									</button>
-									<button
-										type="button"
-										class="px-4 py-2 text-sm font-medium rounded-full transition-all duration-200"
-										class:bg-primary={loginMode === 'name'}
-										class:text-white={loginMode === 'name'}
-										class:text-gray-600={loginMode !== 'name'}
-										on:click={() => {loginMode = 'name'; identifier = ''; error = '';}}
-									>
-										Username
-									</button>
-								</div>
-							</div>
-
-							<!-- Email/Name Input -->
+							<!-- Identifier Input (email or username) -->
 							<div class="space-y-2">
-								<label for="identifier" class="block text-sm font-medium text-gray-700">
-									{loginMode === 'email' ? 'Email' : 'Username'}
-								</label>
+								<label for="identifier" class="block text-sm font-medium text-gray-700">Email or Username</label>
 								<div class="relative">
 									<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-										{#if loginMode === 'email'}
-											<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-											</svg>
-										{:else}
-											<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-											</svg>
-										{/if}
+										<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+										</svg>
 									</div>
 									<input
 										id="identifier"
 										name="identifier"
-										type={loginMode === 'email' ? 'email' : 'text'}
-										autocomplete={loginMode === 'email' ? 'email' : 'username'}
+										type="text"
+										autocomplete="username"
 										required
 										bind:value={identifier}
 										class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-										placeholder={loginMode === 'email' ? 'Enter your email' : 'Enter your username'}
+										placeholder="Enter your email or username"
 									/>
 								</div>
 							</div>

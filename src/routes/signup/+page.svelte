@@ -39,11 +39,11 @@
 		error = '';
 		
 		try {			
-			const response = await api.register({ 
-				name: name.trim(), 
-				mail: email.trim(), 
-				password: password 
-			});
+				const response = await api.register({ 
+					name: name.trim(), 
+					mail: email.trim().toLowerCase(), 
+					password: password 
+				});
 			
 			if (response.status === 'ok') {
 				// After successful signup, redirect to login
@@ -74,7 +74,7 @@
 			<div class="flex flex-col lg:flex-row-reverse min-h-[700px]">
 				
 				<!-- Right Panel - Welcome Message -->
-				<div class="lg:w-1/2 bg-primary p-12 flex flex-col justify-center items-center text-white relative overflow-hidden order-first lg:order-last">
+				<div class="lg:w-1/2 p-12 flex flex-col justify-center items-center text-white relative overflow-hidden order-first lg:order-last" style="background-color: #7495ED;">
 					<!-- Decorative elements -->
 					<div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-10 rounded-full translate-x-20 -translate-y-20"></div>
 					<div class="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-16 translate-y-16"></div>
@@ -95,7 +95,7 @@
 				</div>
 
 				<!-- Left Panel - Registration Form -->
-				<div class="lg:w-1/2 p-12 flex flex-col justify-center bg-white">
+				<div class="lg:w-1/2 p-12 flex flex-col justify-center bg-gray-100">
 					<div class="max-w-md mx-auto w-full">
 						<div class="text-center mb-8">
 							<h1 class="text-3xl font-bold text-gray-800 mb-2">Registration</h1>
@@ -141,6 +141,7 @@
 										autocomplete="email"
 										required
 										bind:value={email}
+										on:blur={() => email = email.trim().toLowerCase()}
 										class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
 										placeholder="Enter your email"
 									/>

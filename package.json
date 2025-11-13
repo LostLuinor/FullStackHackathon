@@ -33,5 +33,8 @@
 		"tailwindcss": "^4.1.14",
 		"typescript": "^5.9.3",
 		"vite": "^7.1.10"
+	},
+	"dependencies": {
+		"dependencies": "^0.0.1"
 	}
 }
