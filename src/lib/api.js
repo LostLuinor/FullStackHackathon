@@ -212,6 +212,37 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(aiGenData),
     }),
+
+    // Teacher Analytics
+    getTeacherAnalytics: (courseId) => request(`/teacher/analytics/${courseId}`, {
+        method: 'GET',
+    }),
+
+    // Admin Dashboard
+    getAdminDashboard: () => request('/admin/dashboard', {
+        method: 'GET',
+    }),
+
+    // Admin User Management
+    getAdminUsers: () => request('/admin/users', {
+        method: 'GET',
+    }),
+    createAdminUser: (userData) => request('/admin/users', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+    }),
+    updateAdminUser: (userId, userData) => request(`/admin/users/${userId}`, {
+        method: 'PUT',
+        body: JSON.stringify(userData),
+    }),
+    deleteAdminUser: (userId) => request(`/admin/users/${userId}`, {
+        method: 'DELETE',
+    }),
+
+    // Platform Analytics
+    getPlatformAnalytics: (timeRange) => request(`/admin/analytics?range=${timeRange}`, {
+        method: 'GET',
+    }),
 };
 
 export { ApiError };
