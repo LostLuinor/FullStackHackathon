@@ -111,7 +111,7 @@ export const api = {
     // Student Dashboard endpoints
     getStudentDashboard: () => request('/student/dashboard'),
     getRecommendations: () => request('/recommendations'),
-    getLeaderboard: (limit = 10) => request(`/leaderboard?limit=${limit}`),
+    getLeaderboard: (courseFilter, limit = 50) => request(`/leaderboard?${courseFilter ? `course=${courseFilter}&` : ''}limit=${limit}`),
     
     // Course endpoints
     getCourses: () => request('/courses'),
@@ -144,6 +144,9 @@ export const api = {
     // Gamification endpoints
     getBadges: () => request('/student/badges'),
     getXPProgress: () => request('/student/xp'),
+    
+    // Achievements endpoints
+    getAchievements: () => request('/achievements'),
 };
 
 export { ApiError };
