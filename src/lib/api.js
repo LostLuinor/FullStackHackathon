@@ -129,6 +129,13 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ question, lessonContext }),
     }),
+    getAIHistory: () => request('/ai/history'),
+    
+    // AI Feedback endpoints
+    getAIFeedback: (quizData) => request('/ai/feedback', {
+        method: 'POST',
+        body: JSON.stringify(quizData),
+    }),
     
     // Quiz endpoints
     getUpcomingQuizzes: () => request('/student/quizzes/upcoming'),
