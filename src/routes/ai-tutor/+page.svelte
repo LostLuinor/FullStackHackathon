@@ -1,5 +1,5 @@
 <script>
-	import { api } from '$lib/api.js';
+	import api from '$lib/api.js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -69,15 +69,19 @@
 	async function loadConversationHistory() {
 		try {
 			historyLoading = true;
-			// Uncomment when backend is ready
-			// conversationHistory = await api.getAIHistory();
-
-			// Use mock data for now
-			await new Promise(resolve => setTimeout(resolve, 800));
-			conversationHistory = mockHistory;
-			messages = [...mockMessages];
+			// Load actual conversation history from API
+			const response = await api.getAITutorHistory();
+			conversationHistory = response.history || [];
+			
+			// If no conversations exist, create initial message
+			if (messages.length === 0) {
+				messages = [...mockMessages];
+			}
 		} catch (err) {
 			console.error('Error loading conversation history:', err);
+			// Fallback to mock data if API fails
+			conversationHistory = mockHistory;
+			messages = [...mockMessages];
 		} finally {
 			historyLoading = false;
 		}
@@ -119,35 +123,71 @@
 				};
 			}
 
-			// Uncomment when backend is ready
-			// const response = await api.askAITutor(userMessage, lessonContext);
-
-			// Mock AI response
-			await new Promise(resolve => setTimeout(resolve, 2000));
-			const aiResponse = generateMockResponse(userMessage, selectedContext);
+			// Call actual AI API
+			const response = await api.askAITutor({
+				message: userMessage,
+				context: lessonContext,
+				conversationHistory: messages.slice(-10) // Send last 10 messages for context
+			});
 
 			// Remove typing indicator and add AI response
 			messages = messages.filter(m => m.type !== 'typing');
 			messages = [...messages, {
 				id: messageId + 2,
 				type: 'ai',
-				content: aiResponse,
+				content: response.message || response.reply || 'I apologize, but I couldn\'t generate a response right now.',
 				timestamp: new Date()
 			}];
 
 			selectedContext = ''; // Clear context after use
+			
+			// Save conversation to history
+			await saveConversation();
+			
 		} catch (err) {
+			console.error('Error sending message:', err);
 			// Remove typing indicator and show error
 			messages = messages.filter(m => m.type !== 'typing');
+			
+			// Try fallback with mock response
+			let fallbackResponse;
+			try {
+				fallbackResponse = await callFallbackAPI(userMessage, selectedContext);
+			} catch (fallbackErr) {
+				fallbackResponse = 'Sorry, I encountered an error while processing your question. Please try again or contact support if the problem persists.';
+			}
+			
 			messages = [...messages, {
 				id: messageId + 2,
-				type: 'error',
-				content: 'Sorry, I encountered an error while processing your question. Please try again.',
+				type: 'ai',
+				content: fallbackResponse,
 				timestamp: new Date()
 			}];
 		} finally {
 			loading = false;
 			scrollToBottom();
+		}
+	}
+
+	// Fallback API call (could be a different AI service or simplified version)
+	async function callFallbackAPI(message, context) {
+		// This could call a different AI service or a simpler chatbot
+		// For now, return an enhanced mock response
+		return generateMockResponse(message, context);
+	}
+
+	// Save conversation to backend
+	async function saveConversation() {
+		try {
+			if (messages.length > 1) { // Only save if there are actual messages
+				await api.saveAITutorConversation({
+					messages: messages,
+					lastUpdated: new Date().toISOString()
+				});
+			}
+		} catch (err) {
+			console.error('Error saving conversation:', err);
+			// Don't show error to user for background saves
 		}
 	}
 
@@ -257,22 +297,31 @@ Would you like me to elaborate on any of these points or provide examples?`
 	}
 
 	function loadConversation(conversationId) {
-		// In a real app, this would load the specific conversation
-		console.log('Loading conversation:', conversationId);
-		// Reset to show selected conversation
-		messages = [
-			{
-				id: 1,
-				type: 'system',
-				content: `Loaded conversation ${conversationId}. Previous messages would be displayed here.`,
-				timestamp: new Date()
-			}
-		];
+		// Load specific conversation from API
+		api.loadAITutorConversation(conversationId)
+			.then(response => {
+				messages = response.messages || [];
+				console.log('Loaded conversation:', conversationId);
+			})
+			.catch(err => {
+				console.error('Error loading conversation:', err);
+				// Fallback to mock conversation
+				messages = [
+					{
+						id: 1,
+						type: 'system',
+						content: `Loaded conversation ${conversationId}. Previous messages would be displayed here.`,
+						timestamp: new Date()
+					}
+				];
+			});
 	}
 
 	function startNewConversation() {
 		messages = [...mockMessages];
 		selectedContext = '';
+		// Save any existing conversation before starting new one
+		saveConversation();
 	}
 
 	function scrollToBottom() {

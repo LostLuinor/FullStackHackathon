@@ -125,9 +125,19 @@ export const api = {
     getLesson: (lessonId) => request(`/lessons/${lessonId}`),
     
     // AI Tutor endpoints
-    askAITutor: (question, lessonContext) => request('/ai/tutor', {
+    askAITutor: (requestData) => request('/ai/chat', {
         method: 'POST',
-        body: JSON.stringify({ question, lessonContext }),
+        body: JSON.stringify(requestData),
+    }),
+    getAITutorHistory: () => request('/ai/history', {
+        method: 'GET',
+    }),
+    saveAITutorConversation: (conversationData) => request('/ai/conversation', {
+        method: 'POST',
+        body: JSON.stringify(conversationData),
+    }),
+    loadAITutorConversation: (conversationId) => request(`/ai/conversation/${conversationId}`, {
+        method: 'GET',
     }),
     getAIHistory: () => request('/ai/history'),
     
