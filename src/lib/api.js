@@ -147,6 +147,26 @@ export const api = {
     
     // Achievements endpoints
     getAchievements: () => request('/achievements'),
+    
+    // Student Profile endpoints 
+    getStudentProfile: () => request('/student/profile'),
+    updateStudentProfile: (profileData) => request('/student/profile/update', {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
+    }),
+    
+    // Teacher Dashboard endpoints
+    getTeacherDashboard: () => request('/teacher/dashboard'),
+    
+    // Teacher Course Management endpoints
+    getTeacherCourses: () => request('/teacher/courses'),
+    updateTeacherCourse: (courseId, courseData) => request(`/teacher/course/${courseId}`, {
+        method: 'PUT',
+        body: JSON.stringify(courseData),
+    }),
+    deleteTeacherCourse: (courseId) => request(`/teacher/course/${courseId}`, {
+        method: 'DELETE',
+    }),
 };
 
 export { ApiError };
