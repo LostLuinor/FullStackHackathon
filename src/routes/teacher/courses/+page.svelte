@@ -374,9 +374,12 @@
 								<span class="text-primary font-medium">Course Management</span>
 							</nav>
 							<h1 class="text-4xl font-bold text-gray-900">📚 Course Management</h1>
-							<p class="text-gray-600 mt-2 text-lg">Manage and track your courses</p>
+							<p class="text-gray-600 mt-2 text-lg">Manage your courses and track performance</p>
 						</div>
-						<button class="primary-btn px-6 py-3 rounded-xl">
+						<button
+							on:click={() => goto('/teacher/courses/create')}
+							class="primary-btn px-6 py-3 rounded-xl"
+						>
 							➕ Create New Course
 						</button>
 					</div>
@@ -522,7 +525,7 @@
 														📊 Analytics
 													</button>
 													<button 
-														on:click={() => openEditModal(course)}
+														on:click={() => goto(`/teacher/courses/edit/${course.id}`)}
 														class="secondary-btn px-3 py-1 text-xs rounded-lg"
 													>
 														✏️ Edit

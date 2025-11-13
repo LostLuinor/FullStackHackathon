@@ -167,6 +167,11 @@ export const api = {
     deleteTeacherCourse: (courseId) => request(`/teacher/course/${courseId}`, {
         method: 'DELETE',
     }),
+    createTeacherCourse: (courseData) => request('/teacher/course', {
+        method: 'POST',
+        body: JSON.stringify(courseData),
+    }),
+    getTeacherCourse: (courseId) => request(`/teacher/course/${courseId}`),
 };
 
 export { ApiError };
