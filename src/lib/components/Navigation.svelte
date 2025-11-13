@@ -48,6 +48,51 @@
                         >
                             🤖 AI Tutor
                         </a>
+                        <a 
+                            href="/leaderboard" 
+                            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname === '/leaderboard' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}"
+                        >
+                            🏆 Leaderboard
+                        </a>
+                        <a 
+                            href="/badges" 
+                            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname === '/badges' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}"
+                        >
+                            🎖️ Badges
+                        </a>
+                        <a 
+                            href="/profile" 
+                            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname === '/profile' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}"
+                        >
+                            👤 Profile
+                        </a>
+                        <!-- Teacher Navigation -->
+                        {#if $page.url.pathname.startsWith('/teacher')}
+                            <a 
+                                href="/teacher" 
+                                class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname === '/teacher' ? 'border-orange-500 text-orange-600' : 'border-transparent text-orange-500 hover:border-orange-300 hover:text-orange-700'}"
+                            >
+                                📚 Teacher Dashboard
+                            </a>
+                            <a 
+                                href="/teacher/courses" 
+                                class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/courses') ? 'border-orange-500 text-orange-600' : 'border-transparent text-orange-500 hover:border-orange-300 hover:text-orange-700'}"
+                            >
+                                📖 Courses
+                            </a>
+                            <a 
+                                href="/teacher/lessons/create" 
+                                class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/lessons') ? 'border-orange-500 text-orange-600' : 'border-transparent text-orange-500 hover:border-orange-300 hover:text-orange-700'}"
+                            >
+                                🎥 Lessons
+                            </a>
+                            <a 
+                                href="/teacher/quizzes/create" 
+                                class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/quizzes') ? 'border-orange-500 text-orange-600' : 'border-transparent text-orange-500 hover:border-orange-300 hover:text-orange-700'}"
+                            >
+                                📊 Quizzes
+                            </a>
+                        {/if}
                     {/if}
                 </div>
             </div>
@@ -111,6 +156,17 @@
                 <a href="/leaderboard" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname === '/leaderboard' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}">🏆 Leaderboard</a>
                 <a href="/badges" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname === '/badges' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}">🎖️ Badges</a>
                 <a href="/profile" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname === '/profile' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}">👤 Profile</a>
+                
+                <!-- Teacher Navigation (Mobile) -->
+                {#if $page.url.pathname.startsWith('/teacher')}
+                    <div class="border-t border-gray-200 my-2 pt-2">
+                        <div class="px-3 py-1 text-xs font-medium text-gray-500 uppercase tracking-wide">Teacher Tools</div>
+                        <a href="/teacher" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname === '/teacher' ? 'bg-orange-50 text-orange-700' : 'text-orange-500 hover:text-orange-700 hover:bg-orange-50'}">📚 Dashboard</a>
+                        <a href="/teacher/courses" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/courses') ? 'bg-orange-50 text-orange-700' : 'text-orange-500 hover:text-orange-700 hover:bg-orange-50'}">📖 Courses</a>
+                        <a href="/teacher/lessons/create" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/lessons') ? 'bg-orange-50 text-orange-700' : 'text-orange-500 hover:text-orange-700 hover:bg-orange-50'}">🎥 Lessons</a>
+                        <a href="/teacher/quizzes/create" class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {$page.url.pathname.startsWith('/teacher/quizzes') ? 'bg-orange-50 text-orange-700' : 'text-orange-500 hover:text-orange-700 hover:bg-orange-50'}">📊 Quizzes</a>
+                    </div>
+                {/if}
             {/if}
         </div>
         <div class="pt-4 pb-3 border-t border-gray-200">

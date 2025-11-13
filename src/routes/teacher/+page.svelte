@@ -348,6 +348,48 @@
 					</div>
 				</div>
 
+				<!-- Quick Actions -->
+				<div class="bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-xl mb-8">
+					<h2 class="text-2xl font-bold text-gray-900 mb-6">🚀 Quick Actions</h2>
+					<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+						<button
+							on:click={() => goto('/teacher/courses/create')}
+							class="flex flex-col items-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl hover:from-blue-100 hover:to-indigo-100 hover:border-blue-300 transition-all group"
+						>
+							<div class="text-4xl mb-3 group-hover:scale-110 transition-transform">➕</div>
+							<div class="text-lg font-semibold text-gray-900">Create Course</div>
+							<div class="text-sm text-gray-600 text-center">Build a new course from scratch</div>
+						</button>
+						
+						<button
+							on:click={() => goto('/teacher/lessons/create')}
+							class="flex flex-col items-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl hover:from-green-100 hover:to-emerald-100 hover:border-green-300 transition-all group"
+						>
+							<div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎥</div>
+							<div class="text-lg font-semibold text-gray-900">Add Lesson</div>
+							<div class="text-sm text-gray-600 text-center">Upload video or document content</div>
+						</button>
+						
+						<button
+							on:click={() => goto('/teacher/quizzes/create')}
+							class="flex flex-col items-center p-6 bg-gradient-to-br from-purple-50 to-violet-50 border-2 border-purple-200 rounded-2xl hover:from-purple-100 hover:to-violet-100 hover:border-purple-300 transition-all group"
+						>
+							<div class="text-4xl mb-3 group-hover:scale-110 transition-transform">📊</div>
+							<div class="text-lg font-semibold text-gray-900">Create Quiz</div>
+							<div class="text-sm text-gray-600 text-center">Manual creation or AI generation</div>
+						</button>
+						
+						<button
+							on:click={() => goto('/teacher/courses')}
+							class="flex flex-col items-center p-6 bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl hover:from-orange-100 hover:to-amber-100 hover:border-orange-300 transition-all group"
+						>
+							<div class="text-4xl mb-3 group-hover:scale-110 transition-transform">📚</div>
+							<div class="text-lg font-semibold text-gray-900">Manage Courses</div>
+							<div class="text-sm text-gray-600 text-center">Edit, analyze, or delete courses</div>
+						</button>
+					</div>
+				</div>
+
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 					<!-- Courses Created -->
 					<div class="bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl overflow-hidden">

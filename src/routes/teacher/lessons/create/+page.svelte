@@ -110,7 +110,7 @@
 			}
 
 			// Uncomment when backend is ready
-			// const result = await api.createLesson(formData);
+			// const result = await api.createTeacherLesson(formData);
 
 			// Mock save
 			await new Promise(resolve => setTimeout(resolve, 1000));

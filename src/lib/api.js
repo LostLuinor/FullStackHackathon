@@ -172,6 +172,46 @@ export const api = {
         body: JSON.stringify(courseData),
     }),
     getTeacherCourse: (courseId) => request(`/teacher/course/${courseId}`),
+    
+    // Teacher Lesson Management endpoints
+    createTeacherLesson: (formData) => request('/teacher/lesson', {
+        method: 'POST',
+        headers: {
+            // Don't set Content-Type for FormData, let browser set it with boundary
+        },
+        body: formData,
+    }),
+    updateTeacherLesson: (lessonId, formData) => request(`/teacher/lesson/${lessonId}`, {
+        method: 'PUT',
+        headers: {
+            // Don't set Content-Type for FormData, let browser set it with boundary
+        },
+        body: formData,
+    }),
+    deleteTeacherLesson: (lessonId) => request(`/teacher/lesson/${lessonId}`, {
+        method: 'DELETE',
+    }),
+    getTeacherLesson: (lessonId) => request(`/teacher/lesson/${lessonId}`),
+    
+    // Teacher Quiz Management endpoints
+    createTeacherQuiz: (quizData) => request('/teacher/quiz', {
+        method: 'POST',
+        body: JSON.stringify(quizData),
+    }),
+    updateTeacherQuiz: (quizId, quizData) => request(`/teacher/quiz/${quizId}`, {
+        method: 'PUT',
+        body: JSON.stringify(quizData),
+    }),
+    deleteTeacherQuiz: (quizId) => request(`/teacher/quiz/${quizId}`, {
+        method: 'DELETE',
+    }),
+    getTeacherQuiz: (quizId) => request(`/teacher/quiz/${quizId}`),
+    
+    // AI-powered Quiz Generation
+    generateQuizWithAI: (aiGenData) => request('/ai/generate-quiz', {
+        method: 'POST',
+        body: JSON.stringify(aiGenData),
+    }),
 };
 
 export { ApiError };
