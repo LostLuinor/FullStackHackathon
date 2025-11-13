@@ -107,6 +107,24 @@ export const api = {
         method: 'PUT',
         body: JSON.stringify(userData),
     }),
+
+    // Student Dashboard endpoints
+    getStudentDashboard: () => request('/student/dashboard'),
+    getRecommendations: () => request('/recommendations'),
+    getLeaderboard: (limit = 10) => request(`/leaderboard?limit=${limit}`),
+    
+    // Course endpoints
+    getCourses: () => request('/courses'),
+    getCourse: (courseId) => request(`/courses/${courseId}`),
+    getStudentProgress: () => request('/student/progress'),
+    
+    // Quiz endpoints
+    getUpcomingQuizzes: () => request('/student/quizzes/upcoming'),
+    getQuizAttempts: () => request('/student/quiz-attempts'),
+    
+    // Gamification endpoints
+    getBadges: () => request('/student/badges'),
+    getXPProgress: () => request('/student/xp'),
 };
 
 export { ApiError };
