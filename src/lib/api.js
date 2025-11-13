@@ -243,6 +243,40 @@ export const api = {
     getPlatformAnalytics: (timeRange) => request(`/admin/analytics?range=${timeRange}`, {
         method: 'GET',
     }),
+
+    // Hotjar Reports
+    getHotjarReports: () => request('/admin/hotjar-report', {
+        method: 'GET',
+    }),
+    uploadHotjarReport: (formData) => request('/admin/hotjar-report', {
+        method: 'POST',
+        headers: {
+            // Don't set Content-Type for FormData, let browser set it with boundary
+        },
+        body: formData,
+    }),
+
+    // User Settings
+    getUserSettings: () => request('/settings', {
+        method: 'GET',
+    }),
+    updateUserSettings: (settingsData) => request('/settings/update', {
+        method: 'PUT',
+        body: JSON.stringify(settingsData),
+    }),
+    changePassword: (passwordData) => request('/settings/password', {
+        method: 'PUT',
+        body: JSON.stringify(passwordData),
+    }),
+
+    // Support & Help
+    getSupportData: () => request('/support', {
+        method: 'GET',
+    }),
+    submitSupportTicket: (ticketData) => request('/support/ticket', {
+        method: 'POST',
+        body: JSON.stringify(ticketData),
+    }),
 };
 
 export { ApiError };
